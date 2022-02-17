@@ -1,0 +1,28 @@
+crypto ikev2 policy XX
+ encryption aes-XX
+ integrity shaXX
+ group XX
+ prf XXX
+ lifetime seconds XX
+crypto ikev2 enable outside
+
+object-groun nentwork XXX-local
+ network-object 
+ 
+object-groun nentwork XXX-remote
+ network-object 
+ 
+access-list ipsec-XXX extended permit ip object-group XXX-local object-group XXX-remote
+access-list acl-XXX extended permit ip any any
+
+nat (XXX,XXXX) source static XXX-local XXX-local destination static XXX-remote XXX-remote no-proxy-arp route-lookup
+
+tunnel-group XXX.XXX.XXX.XXX type ipsec-l2l
+tunnel-group XXX.XXX.XXX.XXX ipsec-attributes
+	remote-authentication pre-shared-key 1234567890
+	local-authentication pre-shared-key 1234567890
+	isakmp keepalive threshold 10 retry 2
+
+crypto map CRYPTO-MAP 10 match address ipsec-XXXXXX
+crypto map CRYPTO-MAP 10 set peer XXX.XXX.XXX.XXX
+crypto map CRYPTO-MAP 10 set ikev2 ipsec-proposal VPN-TRANSFORM
